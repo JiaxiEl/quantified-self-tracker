@@ -1,23 +1,28 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import authService from '../../services/authService';
 
 const Register = () => {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
 
     const handleRegister = async (e: React.FormEvent) => {
         e.preventDefault();
+        setError(null); // Reset error message before attempting registration
         try {
             await authService.register(username, email, password);
             navigate('/login');
-        } catch (error) {
-            if (error instanceof Error) {
-                console.error(error.message);
+        } catch (err: unknown) {
+            if (axios.isAxiosError(err) && err.response) {
+                setError(err.response.data.message);
+            } else if (err instanceof Error) {
+                setError(err.message);
             } else {
-                console.error('An unknown error occurred');
+                setError('An unknown error occurred. Please try again.');
             }
         }
     };
@@ -46,6 +51,7 @@ const Register = () => {
                 />
                 <button type="submit">Register</button>
             </form>
+            {error && <p style={{ color: 'red' }}>{error}</p>}
         </div>
     );
 };

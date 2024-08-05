@@ -2,18 +2,21 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import authService from '../../services/authService';
+import { useAuth } from '../../context/AuthContext';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
+    const { login } = useAuth();
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         setError(null); // Reset error message before attempting login
         try {
-            await authService.login(email, password);
+            const data = await authService.login(email, password);
+            login(data.token);
             navigate('/dashboard');
         } catch (error: unknown) {
             if (axios.isAxiosError(error) && error.response) {
