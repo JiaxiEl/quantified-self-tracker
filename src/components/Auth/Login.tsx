@@ -1,22 +1,25 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import authService from '../../services/authService';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
+        setError(null); // Reset error message before attempting login
         try {
             await authService.login(email, password);
             navigate('/dashboard');
-        } catch (error) {
-            if (error instanceof Error) {
-                console.error(error.message);
+        } catch (error: unknown) {
+            if (axios.isAxiosError(error) && error.response) {
+                setError(error.response.data.message);
             } else {
-                console.error('An unknown error occurred');
+                setError('An unknown error occurred. Please try again.');
             }
         }
     };
@@ -39,6 +42,7 @@ const Login = () => {
                 />
                 <button type="submit">Login</button>
             </form>
+            {error && <p style={{ color: 'red' }}>{error}</p>}
         </div>
     );
 };
