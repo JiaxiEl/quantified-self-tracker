@@ -1,6 +1,7 @@
 import React from 'react';
 import TaskList from '../Tasks/TaskList';
 import HabitList from '../Habits/HabitList';
+import GoalList from '../Goals/GoalList';
 
 const Dashboard = () => {
     return (
@@ -9,6 +10,7 @@ const Dashboard = () => {
             <p>Welcome to your dashboard. Here you can track your goals, habits, and tasks.</p>
             <TaskList />
             <HabitList />
+            <GoalList />
         </div>
     );
 };
