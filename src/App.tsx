@@ -1,12 +1,12 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './views/Home';
-import Login from './components/Auth/Login';
-import Register from './components/Auth/Register';
-import Dashboard from './components/Dashboard/Dashboard';
-import Profile from './components/Profile/Profile';
-import Navbar from './components/Shared/Navbar';
-import ProtectedRoute from './components/Shared/ProtectedRoute';
+import Login from './components/auth/sign-in-form.tsx';
+import SignUpForm from './components/auth/sign-up-form.tsx';
+import Dashboard from './components/dashboard/Dashboard';
+import Profile from './components/profile/Profile';
+import Navbar from './components/shared/Navbar';
+import ProtectedRoute from './components/shared/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
 import './App.css';
 
@@ -18,7 +18,7 @@ const App = () => {
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<Register />} />
+                    <Route path="/register" element={<SignUpForm />} />
                     <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
                     <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
                 </Routes>

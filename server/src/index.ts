@@ -7,6 +7,7 @@ import userRoutes from './routes/userRoutes';
 import taskRoutes from './routes/taskRoutes';
 import habitRoutes from './routes/habitRoutes';
 import goalRoutes from './routes/goalRoutes';
+import analyticsRoutes from './routes/analyticsRoutes';
 
 dotenv.config();
 
@@ -30,6 +31,7 @@ app.use('/api/user', userRoutes);
 app.use('/api/tasks', taskRoutes);
 app.use('/api/habits', habitRoutes);
 app.use('/api/goals', goalRoutes);
+app.use('/api/analytics', analyticsRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
