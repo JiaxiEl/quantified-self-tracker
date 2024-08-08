@@ -3,6 +3,10 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import authRoutes from './routes/authRoutes';
+import userRoutes from './routes/userRoutes';
+import taskRoutes from './routes/taskRoutes';
+import habitRoutes from './routes/habitRoutes';
+import goalRoutes from './routes/goalRoutes';
 
 dotenv.config();
 
@@ -22,6 +26,10 @@ mongoose.connect(MONGO_URI)
     .catch(err => console.log(err));
 
 app.use('/api/auth', authRoutes);
+app.use('/api/user', userRoutes);
+app.use('/api/tasks', taskRoutes);
+app.use('/api/habits', habitRoutes);
+app.use('/api/goals', goalRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
