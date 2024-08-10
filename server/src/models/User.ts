@@ -1,17 +1,10 @@
-import mongoose, { Document, Schema } from 'mongoose';
+// server/src/models/User.ts
+import mongoose from 'mongoose';
 
-interface IUser extends Document {
-    username: string;
-    email: string;
-    password: string;
-    bio?: string;
-}
-
-const UserSchema: Schema = new Schema({
-    username: { type: String, required: true },
+const userSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    bio: { type: String, default: '' }
+    // You can add more fields like name, roles, etc., depending on your needs
 });
 
-export default mongoose.model<IUser>('User', UserSchema);
+export const User = mongoose.model('User', userSchema);
