@@ -36,10 +36,10 @@
       "static/chunks/main-app.js",
       "static/chunks/app/_not-found/page.js"
     ],
-    "/auth/sign-up/page": [
+    "/auth/reset-password/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/auth/sign-up/page.js"
+      "static/chunks/app/auth/reset-password/page.js"
     ]
   }
 }
