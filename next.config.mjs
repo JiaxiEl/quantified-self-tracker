@@ -1,4 +1,15 @@
-/** @type {import('next').NextConfig} */
-const config = {};
+// next.config.mjs
 
-export default config;
+export const nextConfig = {
+    reactStrictMode: true,
+    async rewrites() {
+        return [
+            {
+                source: '/api/:path*',
+                destination: 'http://localhost:5000/api/:path*', // Proxy to backend
+            },
+        ];
+    },
+};
+
+export default nextConfig;
