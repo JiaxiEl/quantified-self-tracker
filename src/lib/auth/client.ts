@@ -64,6 +64,31 @@ class AuthClient {
     localStorage.removeItem('custom-auth-token');
     return {};
   }
+  async resetPassword(params: { email: string }): Promise<{ error?: string }> {
+    try {
+      const response = await axios.post(`${API_BASE_URL}/api/auth/reset-password`, params);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return { error: error.response?.data?.error || 'Failed to send recovery link' };
+      } else {
+        return { error: 'An unexpected error occurred' };
+      }
+    }
+  }
+
+  async confirmResetPassword(params: { token: string; password: string }): Promise<{ error?: string }> {
+    try {
+      const response = await axios.post(`${API_BASE_URL}/api/auth/reset-password/confirm`, params);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return { error: error.response?.data?.error || 'Failed to reset password' };
+      } else {
+        return { error: 'An unexpected error occurred' };
+      }
+    }
+  }
 }
 
 export const authClient = new AuthClient();
