@@ -16,7 +16,7 @@ export function GoalsProgress({ value, sx }: GoalsProgressProps): React.JSX.Elem
                 <Typography variant="h6">Goals Progress</Typography>
                 <LinearProgress variant="determinate" value={value} />
                 <Typography sx={{ mt: 2 }} variant="body2">
-                    {value}% of your goals have been achieved.
+                    {value.toFixed(1)}% of your goals have been achieved.
                 </Typography>
             </CardContent>
         </Card>

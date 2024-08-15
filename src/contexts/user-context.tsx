@@ -10,6 +10,7 @@ export interface UserContextValue {
   error: string | null;
   isLoading: boolean;
   checkSession?: () => Promise<void>;
+  setUser: (user: User | null) => void; // Added setUser to the context value
 }
 
 export const UserContext = React.createContext<UserContextValue | undefined>(undefined);
@@ -24,6 +25,10 @@ export function UserProvider({ children }: UserProviderProps): React.JSX.Element
     error: null,
     isLoading: true,
   });
+
+  const setUser = React.useCallback((user: User | null) => {
+    setState((prev) => ({ ...prev, user }));
+  }, []);
 
   const checkSession = React.useCallback(async (): Promise<void> => {
     try {
@@ -40,17 +45,19 @@ export function UserProvider({ children }: UserProviderProps): React.JSX.Element
       logger.error(err);
       setState((prev) => ({ ...prev, user: null, error: 'Something went wrong', isLoading: false }));
     }
-  }, []);
+  }, []);  // Dependency array is empty to avoid unnecessary re-renders
 
   React.useEffect(() => {
     checkSession().catch((err: unknown) => {
       logger.error(err);
-      // noop
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- Expected
-  }, []);
+  }, [checkSession]);  // Ensure that the effect only runs when checkSession changes (which is stable due to useCallback)
 
-  return <UserContext.Provider value={{ ...state, checkSession }}>{children}</UserContext.Provider>;
+  return (
+      <UserContext.Provider value={{ ...state, checkSession, setUser }}>
+        {children}
+      </UserContext.Provider>
+  );
 }
 
 export const UserConsumer = UserContext.Consumer;

@@ -1,8 +1,10 @@
 import axios from 'axios';
 import { User } from '@/types/user';
+
 const API_BASE_URL = process.env.NODE_ENV === 'development'
     ? 'http://localhost:5000'
     : 'https://Jiaxi.com';
+
 export interface SignUpParams {
   firstName: string;
   lastName: string;
@@ -13,6 +15,12 @@ export interface SignUpParams {
 export interface SignInWithPasswordParams {
   email: string;
   password: string;
+}
+
+export interface CreateGoalParams {
+  title: string;
+  description: string;
+  targetDate: string;
 }
 
 class AuthClient {
@@ -51,7 +59,7 @@ class AuthClient {
     }
 
     try {
-      const response = await axios.get('/api/auth/me', {
+      const response = await axios.get(`${API_BASE_URL}/api/auth/me`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       return { data: response.data };
@@ -60,10 +68,32 @@ class AuthClient {
     }
   }
 
+  async createGoal(params: CreateGoalParams): Promise<{ data?: any; error?: string }> {
+    const token = localStorage.getItem('custom-auth-token');
+    if (!token) {
+      return { error: 'No authentication token found' };
+    }
+
+    try {
+      const response = await axios.post(`${API_BASE_URL}/api/goals`, params, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return { data: response.data };
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return { error: error.response?.data?.error || 'Goal creation failed' };
+      } else {
+        return { error: 'An unexpected error occurred' };
+      }
+    }
+  }
+
+
   async signOut(): Promise<{ error?: string }> {
     localStorage.removeItem('custom-auth-token');
     return {};
   }
+
   async resetPassword(params: { email: string }): Promise<{ error?: string }> {
     try {
       const response = await axios.post(`${API_BASE_URL}/api/auth/reset-password`, params);
