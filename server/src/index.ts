@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import authRoutes from './routes/authRoutes';
 import goalRoutes from './routes/goalRoutes';
+import taskRoutes from './routes/taskRoutes';
 import { protect } from './middleware/authMiddleware';
 import { notFound, errorHandler } from './middleware/errorMiddleware';
 import path from 'path';
@@ -18,6 +19,7 @@ app.use(express.json());
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/goals', protect, goalRoutes);  // Ensure this line is correct
+app.use('/api/tasks', protect, taskRoutes);
 
 // Error handling middleware
 app.use(notFound);
