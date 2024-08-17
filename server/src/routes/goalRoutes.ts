@@ -1,5 +1,5 @@
 import express from 'express';
-import { AuthRequest, protect } from '../middleware/authMiddleware';  // Ensure protect is imported
+import { AuthRequest, protect } from '../middleware/authMiddleware';
 import Goal from '../models/goal';
 
 const router = express.Router();
@@ -10,11 +10,7 @@ router.get('/', protect, async (req: AuthRequest, res) => {
         const goals = await Goal.find({ user: req.user!._id });
         res.json(goals);
     } catch (error) {
-        if (error instanceof Error) {
-            res.status(500).json({ message: error.message });
-        } else {
-            res.status(500).json({ message: 'An unknown error occurred' });
-        }
+        res.status(500).json({ message: (error as Error).message });
     }
 });
 
@@ -23,7 +19,7 @@ router.post('/', protect, async (req: AuthRequest, res) => {
     try {
         const { title, description, targetDate } = req.body;
         const goal = new Goal({
-            user: req.user!._id,  // Ensure req.user is populated by the protect middleware
+            user: req.user!._id,
             title,
             description,
             targetDate,
@@ -51,11 +47,23 @@ router.put('/:id', protect, async (req: AuthRequest, res) => {
             res.status(404).json({ message: 'Goal not found' });
         }
     } catch (error) {
-        if (error instanceof Error) {
-            res.status(500).json({ message: error.message });
+        res.status(500).json({ message: (error as Error).message });
+    }
+});
+
+// Mark a goal as completed
+router.patch('/:id/complete', protect, async (req: AuthRequest, res) => {
+    try {
+        const goal = await Goal.findById(req.params.id);
+        if (goal && String(goal.user) === String(req.user!._id)) {
+            goal.completed = true;
+            const updatedGoal = await goal.save();
+            res.json(updatedGoal);
         } else {
-            res.status(500).json({ message: 'An unknown error occurred' });
+            res.status(404).json({ message: 'Goal not found' });
         }
+    } catch (error) {
+        res.status(500).json({ message: (error as Error).message });
     }
 });
 
@@ -70,11 +78,7 @@ router.delete('/:id', protect, async (req: AuthRequest, res) => {
             res.status(404).json({ message: 'Goal not found' });
         }
     } catch (error) {
-        if (error instanceof Error) {
-            res.status(500).json({ message: error.message });
-        } else {
-            res.status(500).json({ message: 'An unknown error occurred' });
-        }
+        res.status(500).json({ message: (error as Error).message });
     }
 });
 
