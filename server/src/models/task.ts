@@ -1,19 +1,22 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Document, Schema } from 'mongoose';
 
+// Define the interface for a Task document
 export interface ITask extends Document {
-    goal: mongoose.Types.ObjectId;
     title: string;
     description: string;
-    dueDate: Date;
+    targetDate: Date;
     completed: boolean;
+    user: mongoose.Types.ObjectId;  // Reference to the User model
 }
 
+// Create the schema for a Task document
 const TaskSchema: Schema = new Schema({
-    goal: { type: Schema.Types.ObjectId, ref: 'Goal', required: true },
     title: { type: String, required: true },
-    description: { type: String, required: true },
-    dueDate: { type: Date, required: true },
+    description: { type: String },
+    targetDate: { type: Date, required: true },
     completed: { type: Boolean, default: false },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },  // User reference
 });
 
+// Export the Task model
 export const Task = mongoose.model<ITask>('Task', TaskSchema);

@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { Task } from '@/types/task';
+import { Button, TextField, Box } from '@mui/material';
 
 export interface TaskFormProps {
     goalId: string;
@@ -29,34 +30,43 @@ export function TaskForm({ goalId, onTaskCreated, yourJWTToken }: TaskFormProps)
         if (response.ok) {
             const newTask: Task = await response.json();
             onTaskCreated(newTask);
+            setTitle('');
+            setDescription('');
+            setDueDate('');
         } else {
             console.error('Failed to create task');
         }
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <input
-                type="text"
+        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
+            <TextField
+                fullWidth
+                label="Task Title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="Task Title"
                 required
+                sx={{ mb: 2 }}
             />
-            <input
-                type="text"
+            <TextField
+                fullWidth
+                label="Task Description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder="Task Description"
                 required
+                sx={{ mb: 2 }}
             />
-            <input
+            <TextField
+                fullWidth
                 type="date"
                 value={dueDate}
                 onChange={(e) => setDueDate(e.target.value)}
                 required
+                sx={{ mb: 2 }}
             />
-            <button type="submit">Create Task</button>
-        </form>
+            <Button type="submit" variant="contained" color="primary">
+                Create Task
+            </Button>
+        </Box>
     );
 }

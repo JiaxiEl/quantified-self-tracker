@@ -1,9 +1,10 @@
 import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
-import { User, IUser } from '../models/user';
+import { User, IUser } from '../models/user'; // Ensure IUser is defined in the user model
+import { Document } from 'mongoose';
 
 export interface AuthRequest extends Request {
-    user?: IUser;  // Specify the correct type for the user property
+    user?: IUser & Document;  // Use IUser combined with Mongoose's Document type
 }
 
 export const protect = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
@@ -31,4 +32,3 @@ export const protect = async (req: AuthRequest, res: Response, next: NextFunctio
         res.status(401).json({ message: 'Not authorized, no token' });
     }
 };
-;
